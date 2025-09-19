@@ -99,7 +99,6 @@ app.get('/api', (req, res) => {
       'GET /api': 'This endpoint - API documentation',
       'POST /hackrx/upload': 'Upload PDF and create embeddings/index (returns pdf_id)',
       'POST /hackrx/query': 'Query PDF using pdf_id and question',
-      'POST /api/process-voice': 'Process voice/audio text (legacy)',
       'POST /api/chat': 'General chat/conversation endpoint (legacy)'
     },
     ml_api: {
@@ -281,28 +280,6 @@ app.post('/hackrx/query', upload.none(), async (req, res) => {
   }
 });
 
-// Voice processing endpoint
-app.post('/api/process-voice', async (req, res) => {
-  try {
-    const { audioText, question } = req.body;
-
-    if (!audioText && !question) {
-      return res.status(400).json({ error: 'Audio text or question is required' });
-    }
-
-    // Process the transcribed audio text
-    const mlResponse = await simulateMLAPI(audioText, question);
-
-    res.json({
-      success: true,
-      response: mlResponse,
-      originalText: audioText,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 // Chat endpoint for general conversations
 app.post('/api/chat', async (req, res) => {
@@ -313,8 +290,17 @@ app.post('/api/chat', async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Here you would integrate with your ML model API
-    const mlResponse = await simulateMLAPI(null, message);
+    console.log('💬 General chat message:', message);
+    
+    // For general chat, provide a simple response without requiring ML API
+    const responses = [
+      `Thank you for your message: "${message}". This is a general chat response.`,
+      `I received your message about "${message}". For document analysis, please upload a PDF file first.`,
+      `Hello! You said: "${message}". I'm ready to help with document analysis if you upload a PDF.`,
+      `I understand you're asking about "${message}". Upload a PDF document and I can provide detailed analysis.`
+    ];
+    
+    const mlResponse = responses[Math.floor(Math.random() * responses.length)];
 
     res.json({
       success: true,
@@ -323,6 +309,7 @@ app.post('/api/chat', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
+    console.error('Chat error:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
