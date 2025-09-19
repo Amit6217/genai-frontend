@@ -15,7 +15,7 @@ const VoiceRecognition: React.FC<VoiceRecognitionProps> = ({
   setIsListening,
 }) => {
   const [recognition, setRecognition] = useState<any>(null);
-  const [transcript, setTranscript] = useState('');
+  const [, setTranscript] = useState('');
   const [isSupported, setIsSupported] = useState(false);
 
   useEffect(() => {
@@ -46,6 +46,8 @@ const VoiceRecognition: React.FC<VoiceRecognitionProps> = ({
           if (finalTranscript) {
             onTranscription(finalTranscript);
             setTranscript('');
+            // Auto-stop listening when final transcript is received
+            stopListening();
           }
         };
 
@@ -117,26 +119,26 @@ const VoiceRecognition: React.FC<VoiceRecognitionProps> = ({
         title={isListening ? 'Stop listening' : 'Start voice input'}
       >
         {isListening ? <MicOff size={20} /> : <Mic size={20} />}
-        <span className="text-sm font-medium">
+        {/* <span className="text-sm font-medium">
           {isListening ? 'Stop' : 'Voice'}
-        </span>
+        </span> */}
       </button>
 
-      {isListening && transcript && (
+      {/* {isListening && transcript && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 animate-fade-in">
           <p className="text-sm text-blue-800">
             <span className="font-medium">Listening:</span> {transcript}
           </p>
         </div>
-      )}
+      )} */}
 
-      {isListening && (
+      {/* {isListening && (
         <div className="flex items-center justify-center space-x-1">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
           <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" style={{ animationDelay: '0.1s' }}></div>
           <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" style={{ animationDelay: '0.2s' }}></div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

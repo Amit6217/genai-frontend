@@ -60,15 +60,6 @@ export const apiService = {
     return response.data;
   },
 
-  // Process voice input
-  async processVoice(audioText: string, question?: string): Promise<ChatResponse> {
-    const response = await api.post('/api/process-voice', {
-      audioText,
-      question,
-    });
-    return response.data;
-  },
-
   // HackRX: Upload PDF and get pdf_id
   async uploadPDFToHackRX(file: File): Promise<HackRXUploadResponse> {
     const formData = new FormData();
