@@ -221,7 +221,7 @@ const ChatInterface: React.FC = () => {
       {/* Main chat container */}
       <div className="relative z-10 flex flex-col h-screen">
         {/* Header */}
-        <div className="bg-white bg-opacity-100 border-b border-gray-200 px-6 py-4 rounded-t-xl shadow-lg backdrop-blur-md">
+        <div className="bg-white bg-opacity-100 border-b border-gray-200 px-3 py-2 sm:px-6 sm:py-4 rounded-t-xl shadow-lg backdrop-blur-md">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-primary-500 rounded-full">
               <Bot className="text-white" size={24} />
@@ -407,7 +407,7 @@ const ChatInterface: React.FC = () => {
             onKeyPress={handleKeyPress}
             placeholder={selectedFile ? "Add a question about your file..." : "Type your message..."}
             className="flex-1 bg-transparent text-black placeholder-gray-600 focus:outline-none resize-none text-sm px-2 py-1 rounded"
-            style={{ minHeight: "32px", maxHeight: "80px" }}
+            style={{ minHeight: "32px", maxHeight: "50px" }}
             rows={1}
             disabled={isLoading || isListening}
           />
