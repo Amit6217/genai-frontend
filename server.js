@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
+const fetch = require('node-fetch'); // Use require for node-fetch
 require('dotenv').config();
 
 const app = express();
@@ -478,18 +479,19 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: error.message });
 });
 
-// Keep ML API alive by pinging /health every 10 minutes
-if (process.env.ML_API_URL) {
-  setInterval(async () => {
-    try {
-      const healthUrl = `${process.env.ML_API_URL}/health`;
-      const response = await axios.get(healthUrl, { timeout: 10000 });
-      console.log(`[ML API Keepalive] Health check status: ${response.status}`);
-    } catch (err) {
-      console.warn(`[ML API Keepalive] Health check failed: ${err.message}`);
-    }
-  }, 10 * 60 * 1000); // 10 minutes
+const ML_API_URL = process.env.ML_API_URL || "https://your-ml-service.onrender.com";
+
+function pingHealth() {
+  axios.get(`${ML_API_URL}/health`)
+    .then(res => console.log(`[ML_API Keepalive] Health check: ${res.status}`))
+    .catch(err => console.error("[ML_API Keepalive] Health check failed:", err.message));
 }
+
+// call every 10 minutes
+setInterval(pingHealth, 10 * 60 * 1000);
+
+// run once at startup
+pingHealth();
 
 // Start server
 app.listen(PORT, () => {
