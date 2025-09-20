@@ -478,6 +478,19 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: error.message });
 });
 
+// Keep ML API alive by pinging /health every 10 minutes
+if (process.env.ML_API_URL) {
+  setInterval(async () => {
+    try {
+      const healthUrl = `${process.env.ML_API_URL}/health`;
+      const response = await axios.get(healthUrl, { timeout: 10000 });
+      console.log(`[ML API Keepalive] Health check status: ${response.status}`);
+    } catch (err) {
+      console.warn(`[ML API Keepalive] Health check failed: ${err.message}`);
+    }
+  }, 10 * 60 * 1000); // 10 minutes
+}
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
