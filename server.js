@@ -5,7 +5,8 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
-const fetch = require('node-fetch'); // Use require for node-fetch
+const fetch = require('node-fetch');
+const keepAlive = require("./utils/keepalive");
 require('dotenv').config();
 
 const app = express();
@@ -87,6 +88,10 @@ const upload = multer({
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
+});
+
+app.get("/ping", (req, res) => {
+  res.status(200).json({ message: "pong" });
 });
 
 // API endpoints summary
@@ -497,6 +502,7 @@ pingHealth();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
+  keepAlive();
 });
 
 module.exports = app;
