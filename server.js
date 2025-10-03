@@ -95,6 +95,9 @@ app.get("/ping", (req, res) => {
 });
 
 // API endpoints summary
+app.get('/', (req, res) => {
+  res.redirect('/api');
+});
 app.get('/api', (req, res) => {
   res.json({
     name: 'ML Integration Backend API',
